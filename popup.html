@@ -1,43 +1,19 @@
-<!DOCTYPE html>
-<html lang="es">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Settings</title>
     <style>
-      kbd {
-        font-size: inherit;
-        font-family: inherit;
+      button {
+        margin: 10px;
+        border-radius: 2px;
+        border: 1px solid black;
+        font-family: "Comic Sans MS";
       }
 
-      input {
-        margin-top: 10px;
-        margin-bottom: 10px;
-      }
-
-      .success {
-        color: green;
-      }
-
-      .error {
-        color: red;
-      }
-
-      .message {
-        display: block;
-      }
     </style>
-    <script src="js/popup.js"></script>
   </head>
   <body>
-    <form id="js-form">
-	    <button onclick="sampleClick()">Open 1 udemy</button>
-      <h2 id = "greet">Hello World!</h2>
-<input type = "text" id = "name">
-    </form>
-
-    
+    <h1>Comic Sans Is King</h1>
+    <button id="changeFont">Swap Font</button>
+    <button id="clickExam">Click on Udemy Exam</button>
+    <script src="popup.js"></script>
   </body>
-
 </html>
