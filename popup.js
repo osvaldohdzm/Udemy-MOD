@@ -1,3 +1,5 @@
+
+
 let clickExamBtn = document.getElementById("clickExam");
 
 async function waitForElm(selector) {
@@ -28,37 +30,50 @@ function countInArray(array, value) {
 
 async function main() {
     var exams = document.querySelectorAll('div.quiz-editor--quiz-editor--2RKDC.default-item-editor--item-editor--3GhNq');
-    console.log("Examenes: " + exams.length);
+    console.log("Exams: " + exams.length);
     
     for (let j = 0; j < exams.length; j++) {
         var preguntas = exams[j].querySelectorAll('div.assessment-list--assessment-list--1sF23 > ul > li')
-        console.log("Preguntas en examen " + (j + 1) + ": " + preguntas.length);
+        console.log("Questions in exam " + (j + 1) + ": " + preguntas.length);
         document.querySelectorAll('div.quiz-editor--quiz-editor--2RKDC.default-item-editor--item-editor--3GhNq > div:nth-child(1) > div > div.item-bar--right--4qb_w.item-bar--row--3ZgKF > button')[j].click();
         var arr = [];
-        for (let i = 0; i < preguntas.length; i++) {                   
-            preguntas[i].querySelector('div.assessment-list--assessment-list--1sF23 > ul > li:nth-child(' + (i + 1) + ') > div > button:nth-child(5)').click();
-            var querySelector = 'input[type=radio][data-purpose="knowledge-area-option-toggle"]:checked';
-            console.log("HOLA1")  ;   
-            await waitForElm(querySelector);
-            console.log("HOLA2")    ; 
-            var selectedId = document.querySelector('input[type=radio][data-purpose="knowledge-area-option-toggle"]:checked').id;
+        for (let i = 0; i < preguntas.length; i++) {      
+            var querySelector = 'div.assessment-list--assessment-list--1sF23 > ul > li:nth-child(' + (i + 1) + ') > div > button:nth-child(5)';             
+            preguntas[i].querySelector(querySelector).click();
+            querySelector = 'input[type=radio][data-purpose="knowledge-area-option-toggle"]:checked';  
+            
+            var item = document.querySelector(querySelector);
+            while (item === null) {
+                await new Promise(resolve => setTimeout(resolve, 200));
+                item = document.querySelector(querySelector);
+            };
+
+            var selectedId = item.id;
             const knowledge_area = document.getElementById(selectedId).parentElement.parentElement.querySelector('input[data-purpose="knowledge-area-option-input"]').value.toUpperCase().normalize();
             arr.push(knowledge_area);
             document.querySelectorAll('div.quiz-editor--quiz-editor--2RKDC.default-item-editor--item-editor--3GhNq > div:nth-child(1) > div > div.item-bar--right--4qb_w.item-bar--row--3ZgKF > button')[j].click();
-            console.log("Pregunta " + (i + 1)+ " : "+knowledge_area);
+            console.log("Question " + (i + 1)+ " : "+ knowledge_area);
+
+          
+            
         };
         const count = {};
         arr.forEach(e => count[e] ? count[e]++ : count[e] = 1 );
         console.log(count);
     };
+
+    return 0;
 }
+
 
 clickExamBtn.addEventListener("click", async () => {
     let [tab] = await chrome.tabs.query({active: true, currentWindow:true}) 
     chrome.scripting.executeScript({ 
         target: {tabId: tab.id},
-        files: ['popup.js'],
-       function:  main
-    }  );
-
+        func: main,
+        args: [],
+    } ,
+    (injectionResults) => {
+        console.log('Status: ' + injectionResults);
+    } );
 })
